@@ -1,19 +1,19 @@
 using System;
 
-namespace Builder.Level
+namespace GameCore.Maze
 {
     public sealed class MazeGenerator
     {
         public Maze Maze { get; private set; }
 
-        public MazeGenerator(int height, int width)
+        public MazeGenerator(int height, int width, float verticalWallSize, float horizontalWallSize)
         {
-            CreateNewMaze(height, width);
+            CreateNewMaze(height, width, verticalWallSize, horizontalWallSize);
         }
 
-        public void CreateNewMaze(int height, int width)
+        public void CreateNewMaze(int height, int width, float verticalWallSize, float horizontalWallSize)
         {
-            Maze = new Maze(height, width);
+            Maze = new Maze(height, width, verticalWallSize, horizontalWallSize);
             CreateMaze(height, width);
         }
 
@@ -36,7 +36,7 @@ namespace Builder.Level
 
                 for (int i = 0; i < row.Length; i++)
                 {
-                    if(Maze.BottomWalls[heightNumber, i])
+                    if(Maze.MazeCells[heightNumber, i].IsBottomWall)
                     {
                         row[i] = maxValue;
                         maxValue++;
@@ -59,7 +59,7 @@ namespace Builder.Level
                     bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                     if (isPutWall)
                     {
-                        Maze.RightWalls[heightNumber, i] = true;
+                        Maze.MazeCells[heightNumber, i].IsRightWall = true;
                     }
                     else
                     {
@@ -68,7 +68,7 @@ namespace Builder.Level
                 }
                 else
                 {
-                    Maze.RightWalls[heightNumber, i] = true;
+                    Maze.MazeCells[heightNumber, i].IsRightWall = true;
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace Builder.Level
                     bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                     if (isPutWall)
                     {
-                        Maze.BottomWalls[heightNumber, i] = true;
+                        Maze.MazeCells[heightNumber, i].IsBottomWall = true;
                     }
                     else
                     {
@@ -97,7 +97,7 @@ namespace Builder.Level
                         bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                         if (isPutWall)
                         {
-                            Maze.BottomWalls[heightNumber, i] = true;
+                            Maze.MazeCells[heightNumber, i].IsBottomWall = true;
                         }
                     }
                     isWayOut = false;
@@ -108,7 +108,7 @@ namespace Builder.Level
                 bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                 if (isPutWall)
                 {
-                    Maze.BottomWalls[heightNumber, row.Length - 1] = true;
+                    Maze.MazeCells[heightNumber, row.Length - 1].IsBottomWall = true;
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace Builder.Level
             {
                 if(row[i] != row[i + 1])
                 {
-                    Maze.RightWalls[heightNumber, i] = false;
+                    Maze.MazeCells[heightNumber, i].IsRightWall = false;
                 }
             }
         }
