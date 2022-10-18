@@ -1,5 +1,5 @@
 using UnityEngine;
-using GameCore.Configs.MazeConfig;
+using Configs;
 
 namespace GameCore.Maze
 {
@@ -16,7 +16,8 @@ namespace GameCore.Maze
         private MazeCell[,] _maze;
         private float _verticalWallSize;
         private float _horizontalWallSize;
-        private float _wallHeight;
+        private float _verticalWallHeight;
+        private float _horizontalWallHeight;
 
         public MazeBuilder(MazeConfig config, Transform parent)
         {
@@ -27,11 +28,14 @@ namespace GameCore.Maze
             _horizontalWall = config.HorizontalWall;
             _floor = config.Floor;
             _verticalWallSize = _verticalWall.transform.localScale.z;
+            _verticalWallHeight = _verticalWall.transform.localScale.y;
             _horizontalWallSize = _horizontalWall.transform.localScale.x;
-            _wallHeight = _verticalWall.transform.localScale.y;
+            _horizontalWallHeight = _horizontalWall.transform.localScale.y;
             MazeGenerator generator = new MazeGenerator(_height, _width, _verticalWallSize, _horizontalWallSize);
             _maze = generator.Maze.MazeCells;
         }
+
+        public Vector3 GetCellPosition(int height, int width) => _maze[height, width].Position;
 
         public void BuildMaze()
         {
@@ -41,6 +45,7 @@ namespace GameCore.Maze
             {
                 position = _maze[i, 0].Position;
                 position.x -= _horizontalWallSize / 2;
+                position.y += _horizontalWallHeight / 2;
                 Object.Instantiate(_verticalWall, position, Quaternion.identity, _parent);
             }
 
@@ -48,6 +53,7 @@ namespace GameCore.Maze
             {
                 position = _maze[0, i].Position;
                 position.z += _verticalWallSize / 2;
+                position.y += _verticalWallHeight / 2;
                 Object.Instantiate(_horizontalWall, position, Quaternion.identity, _parent);
             }
 
@@ -59,17 +65,18 @@ namespace GameCore.Maze
                     {
                         position = _maze[i, j].Position;
                         position.x += _horizontalWallSize / 2;
+                        position.y += _horizontalWallHeight / 2;
                         Object.Instantiate(_verticalWall, position, Quaternion.identity, _parent);
                     }
                     if(_maze[i, j].IsBottomWall)
                     {
                         position = _maze[i, j].Position;
                         position.z -= _verticalWallSize / 2;
+                        position.y += _verticalWallHeight / 2;
                         Object.Instantiate(_horizontalWall, position, Quaternion.identity, _parent);
                     }
 
                     position = _maze[i, j].Position;
-                    position.y -= _wallHeight / 2;
                     Object.Instantiate(_floor, position, Quaternion.identity, _parent);
                 }
             }
