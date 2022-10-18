@@ -1,15 +1,19 @@
 using UnityEngine;
 
-namespace GameCore.Configs.MazeConfig
+namespace Configs
 {
+    [CreateAssetMenu(fileName = "NewMazeConfig", menuName = "MazeConfig", order = 2)]
     public sealed class MazeConfig : ScriptableObject
     {
         [SerializeField] private GameObject _verticalWall;
         [SerializeField] private GameObject _horizontalWall;
         [SerializeField] private GameObject _floor;
 
-        [SerializeField] private int _height;
-        [SerializeField] private int _width;
+        [Range(3, 100)]
+        [SerializeField] private int _height = 10;
+
+        [Range(3, 100)]
+        [SerializeField] private int _width = 10;
 
         public GameObject VerticalWall => _verticalWall;
         public GameObject HorizontalWall => _horizontalWall;
