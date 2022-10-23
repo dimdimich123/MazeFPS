@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67b3392d5a7455e47af5fa0a0ba0221c, type: 3}
+  m_Name: TeleportingEnemyConfig
+  m_EditorClassIdentifier: 
+  _health: 100
+  _attack: 25
+  _speed: 4
+  _colorDefault: {r: 0.39081216, g: 0, b: 0.6698113, a: 1}
+  _colorScared: {r: 0.46498793, g: 0.41972235, b: 0.6792453, a: 127}
+  _distanceToFind: 10
+  _stoppingDistance: 0.1
+  _enemyTypeId: 1
