@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using GameCore.Player.Control;
+using GameCore.Players.Control;
 
 namespace Configs
 {

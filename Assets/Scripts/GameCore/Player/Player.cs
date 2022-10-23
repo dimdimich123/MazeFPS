@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using GameCore.Player.Control;
+using GameCore.Players.Control;
 using Configs;
 
-namespace GameCore.Player
+namespace GameCore.Players
 {
     public sealed class Player : MonoBehaviour
     { 
@@ -17,7 +17,8 @@ namespace GameCore.Player
         private Color _colorDefaut;
         private Color _colorHunterMode;
 
-        public event Action<bool> OnTakeBonus;
+        public event Action OnBonusStarted;
+        public event Action OnBonusComplete;
 
         public int Attack { get; private set; }
 
@@ -43,9 +44,9 @@ namespace GameCore.Player
         private IEnumerator EnterHunterMode()
         {
             _material.color = _colorHunterMode;
-            OnTakeBonus?.Invoke(true);
+            OnBonusStarted?.Invoke();
             yield return new WaitForSeconds(15f);
-            OnTakeBonus?.Invoke(false);
+            OnBonusComplete?.Invoke();
             _material.color = _colorDefaut;
         }
     }

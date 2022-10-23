@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace GameCore.Player
+namespace GameCore.Players
 {
     public sealed class PlayerDeath : MonoBehaviour
     {

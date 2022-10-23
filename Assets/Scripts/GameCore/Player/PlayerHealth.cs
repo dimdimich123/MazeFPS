@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using GameCore.CommonLogic;
 
-namespace GameCore.Player
+namespace GameCore.Players
 {
     public sealed class PlayerHealth : MonoBehaviour, IHealth
     {
@@ -36,7 +36,7 @@ namespace GameCore.Player
             {
                 return;
             }
-
+            
             CurrentHealth -= damage;
         }
     }

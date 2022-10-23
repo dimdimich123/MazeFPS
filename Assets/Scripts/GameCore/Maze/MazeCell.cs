@@ -1,9 +1,10 @@
-namespace GameCore.Maze
+namespace GameCore.DynamicMaze
 {
     public sealed class MazeCell
     {
         public bool IsRightWall = false;
         public bool IsBottomWall = false;
-        public UnityEngine.Vector3 Position = new UnityEngine.Vector3(0, 0, 0);
+        public UnityEngine.Vector3 Position;
+        public UnityEngine.Vector3 PositionForMovement;
     }
 }

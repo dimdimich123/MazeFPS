@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace GameCore.Player.Control
+namespace GameCore.Players.Control
 {
     public sealed class KeyboardAndMouse : MovementController
     {

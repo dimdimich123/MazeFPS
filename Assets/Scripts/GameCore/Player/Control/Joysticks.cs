@@ -1,7 +1,7 @@
 using UnityEngine;
 using GameCore.CommonLogic;
 
-namespace GameCore.Player.Control
+namespace GameCore.Players.Control
 {
     public sealed class Joysticks : MovementController, IUIMovementHandler
     {

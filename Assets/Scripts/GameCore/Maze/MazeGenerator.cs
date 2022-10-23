@@ -1,6 +1,6 @@
 using System;
 
-namespace GameCore.Maze
+namespace GameCore.DynamicMaze
 {
     public sealed class MazeGenerator
     {
@@ -36,7 +36,7 @@ namespace GameCore.Maze
 
                 for (int i = 0; i < row.Length; i++)
                 {
-                    if(Maze.MazeCells[heightNumber, i].IsBottomWall)
+                    if(Maze[heightNumber, i].IsBottomWall)
                     {
                         row[i] = maxValue;
                         maxValue++;
@@ -59,7 +59,7 @@ namespace GameCore.Maze
                     bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                     if (isPutWall)
                     {
-                        Maze.MazeCells[heightNumber, i].IsRightWall = true;
+                        Maze[heightNumber, i].IsRightWall = true;
                     }
                     else
                     {
@@ -68,7 +68,7 @@ namespace GameCore.Maze
                 }
                 else
                 {
-                    Maze.MazeCells[heightNumber, i].IsRightWall = true;
+                    Maze[heightNumber, i].IsRightWall = true;
                 }
             }
         }
@@ -83,7 +83,7 @@ namespace GameCore.Maze
                     bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                     if (isPutWall)
                     {
-                        Maze.MazeCells[heightNumber, i].IsBottomWall = true;
+                        Maze[heightNumber, i].IsBottomWall = true;
                     }
                     else
                     {
@@ -97,7 +97,7 @@ namespace GameCore.Maze
                         bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                         if (isPutWall)
                         {
-                            Maze.MazeCells[heightNumber, i].IsBottomWall = true;
+                            Maze[heightNumber, i].IsBottomWall = true;
                         }
                     }
                     isWayOut = false;
@@ -108,7 +108,7 @@ namespace GameCore.Maze
                 bool isPutWall = random.Next(0, 2) > 0 ? true : false;
                 if (isPutWall)
                 {
-                    Maze.MazeCells[heightNumber, row.Length - 1].IsBottomWall = true;
+                    Maze[heightNumber, row.Length - 1].IsBottomWall = true;
                 }
             }
         }
@@ -119,7 +119,7 @@ namespace GameCore.Maze
             {
                 if(row[i] != row[i + 1])
                 {
-                    Maze.MazeCells[heightNumber, i].IsRightWall = false;
+                    Maze[heightNumber, i].IsRightWall = false;
                 }
             }
         }
