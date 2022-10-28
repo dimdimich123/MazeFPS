@@ -1,0 +1,66 @@
+using UnityEngine;
+using UI.LevelCompleted;
+using UI.HUD;
+using UI.Pause;
+
+namespace UI
+{
+    public class LevelUIManager : MonoBehaviour
+    {
+        [SerializeField] private LevelCompletedView _completeView;
+        [SerializeField] private HUDView _hudView;
+        [SerializeField] private PauseView _pauseView;
+
+        private IPanel _currentView;
+
+        private void Awake()
+        {
+            _pauseView.OnContinue += ContinueLevel;
+
+            _currentView = _hudView;
+            _hudView.Open();
+        }
+
+        private void ContinueLevel()
+        {
+            _hudView.Open();
+            _currentView = _hudView;
+        }
+
+        public void LevelComplete(string result)
+        {
+            _currentView?.Close();
+            _completeView.SetResultText(result);
+            _completeView.Open();
+            _currentView = _completeView;
+        }
+
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                OnApplicationFocus(false);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                LevelComplete("Chto????");
+            }
+        }
+
+        private void OnApplicationFocus(bool pause)
+        {
+            if(!pause && (Object)_currentView != _completeView)
+            {
+                _currentView?.Close();
+                _pauseView.Open();
+                _currentView = _pauseView;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            _pauseView.OnContinue -= ContinueLevel;
+        }
+    }
+}
