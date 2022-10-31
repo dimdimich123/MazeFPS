@@ -4,6 +4,7 @@ using Configs;
 using GameCore.DynamicMaze;
 using GameCore.Players;
 using GameCore.CommonLogic;
+using GameCore.ObjectPool;
 
 namespace GameCore.Enemies
 {
@@ -25,9 +26,11 @@ namespace GameCore.Enemies
         protected Player _player;
         protected Transform _playerTransform;
 
-        public int Attack { get; private set; }
+        private EnemiesObjectPool _pool;
 
-        public void Init(EnemyConfig config, Maze maze, Transform playerTransform, Player player)
+        public int Attack { get; private set; }
+        public static int NumberAlive = 0;
+        public void Init(EnemyConfig config, Maze maze, Transform playerTransform, Player player, EnemiesObjectPool pool)
         {
             _colorDefaut = config.ColorDefault;
             _colorScared = config.ColorScared;
@@ -38,7 +41,8 @@ namespace GameCore.Enemies
                 _materials[i] = _renderers[i].materials[0];
                 _materials[i].color = _colorDefaut;
             }
-            
+
+            _pool = pool;
             Attack = config.Attack;
             _player = player;
             _playerTransform = playerTransform;
@@ -48,14 +52,29 @@ namespace GameCore.Enemies
 
             _player.OnBonusStarted += RunAway;
             _player.OnBonusComplete += StopRunAway;
+            _death.OnDie += ReturnToPool;
 
+        }
+
+        public void Active()
+        {
+            NumberAlive++;
+            gameObject.SetActive(true);
             _movementController.StartPatrol();
+        }
+
+        private void ReturnToPool()
+        {
+            NumberAlive--;
+            _pool.ReturnObject(this);
+            gameObject.SetActive(false);
         }
 
         private void OnDestroy()
         {
             _player.OnBonusStarted -= RunAway;
             _player.OnBonusComplete -= StopRunAway;
+            _death.OnDie -= ReturnToPool;
         }
 
         public virtual void RunAway()

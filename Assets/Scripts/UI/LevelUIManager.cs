@@ -5,7 +5,7 @@ using UI.Pause;
 
 namespace UI
 {
-    public class LevelUIManager : MonoBehaviour
+    public sealed class LevelUIManager : MonoBehaviour
     {
         [SerializeField] private LevelCompletedView _completeView;
         [SerializeField] private HUDView _hudView;
@@ -40,11 +40,6 @@ namespace UI
             if(Input.GetKeyDown(KeyCode.Escape))
             {
                 OnApplicationFocus(false);
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                LevelComplete("Chto????");
             }
         }
 
