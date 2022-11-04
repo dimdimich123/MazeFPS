@@ -14,7 +14,6 @@ namespace Infrastructure
 {
     public sealed class LevelBuilder : MonoBehaviour
     {
-        private LevelManager _manager;
         private ConfigsProvider _configsProvider;
         private GameFactory _gameFactory;
         private LevelConfig _levelConfig;
@@ -43,7 +42,9 @@ namespace Infrastructure
 
             Player playerBehaviour = player.GetComponent<Player>();
             LevelUIManager levelUIManager = levelUI.GetComponent<LevelUIManager>();
-            _manager = new LevelManager(playerBehaviour, levelUIManager, _levelConfig.EnemiesData, maze, _gameFactory, _configsProvider, _levelConfig.EnemiesAtSameTime);
+            LevelManager levelManager = gameObject.AddComponent<LevelManager>();
+            levelManager.Init(playerBehaviour, levelUIManager, _levelConfig.EnemiesData, maze, _gameFactory,
+                _configsProvider, _levelConfig.EnemiesAtSameTime, _levelConfig.TimebetweenSpawnBonus);
         }
 
         private void InitPlayer(GameObject player, GameObject levelUI)
@@ -68,11 +69,6 @@ namespace Infrastructure
         {
             PlayerHealth health = player.GetComponent<PlayerHealth>();
             levelUI.GetComponentInChildren<HealthBar>().Init(health);
-        }
-
-        private void OnDestroy()
-        {
-            _manager.Dispose();
         }
     }
 }

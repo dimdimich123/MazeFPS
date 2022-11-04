@@ -9,13 +9,19 @@ namespace GameCore.Enemies
         public event Action OnDie;
 
         private EnemyHealth _health;
-        private bool _isDead = false;
+        private bool _isDead;
 
         public void Init(EnemyHealth health)
         {
             _health = health;
+            _isDead = false;
 
             health.OnChanged += HealthChanged;
+        }
+
+        public void Reinit()
+        {
+            _isDead = false;
         }
 
         private void HealthChanged(int value)

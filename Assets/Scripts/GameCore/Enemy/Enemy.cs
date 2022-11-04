@@ -10,7 +10,9 @@ namespace GameCore.Enemies
 {
     public abstract class Enemy : MonoBehaviour
     {
-        [SerializeField] private LayerMask _playerMask;
+        public static int NumberAlive = 0;
+
+        [SerializeField] protected LayerMask _playerMask;
         [SerializeField] private EnemyTypeId _enemyTypeId;
         public EnemyTypeId EnemyType => _enemyTypeId;
 
@@ -29,7 +31,9 @@ namespace GameCore.Enemies
         private EnemiesObjectPool _pool;
 
         public int Attack { get; private set; }
-        public static int NumberAlive = 0;
+
+        protected bool _isScared = false;
+
         public void Init(EnemyConfig config, Maze maze, Transform playerTransform, Player player, EnemiesObjectPool pool)
         {
             _colorDefaut = config.ColorDefault;
@@ -49,28 +53,36 @@ namespace GameCore.Enemies
             _movementController.Init(maze, config.Speed, config.SpeedMoveAway, config.DistanceToFind, config.StoppingDistance, playerTransform);
             _health.Init(config.Health);
             _death.Init(_health);
+        }
 
-            _player.OnBonusStarted += RunAway;
-            _player.OnBonusComplete += StopRunAway;
-            _death.OnDie += ReturnToPool;
-
+        public virtual void Reinit()
+        {
+            _health.Reinit();
+            _death.Reinit();
         }
 
         public void Active()
         {
             NumberAlive++;
-            gameObject.SetActive(true);
-            _movementController.StartPatrol();
         }
 
         private void ReturnToPool()
         {
             NumberAlive--;
             _pool.ReturnObject(this);
-            gameObject.SetActive(false);
         }
 
-        private void OnDestroy()
+        private void OnEnable()
+        {
+            if (_player != null && _death != null)
+            {
+                _player.OnBonusStarted += RunAway;
+                _player.OnBonusComplete += StopRunAway;
+                _death.OnDie += ReturnToPool;
+            }
+        }
+
+        private void OnDisable()
         {
             _player.OnBonusStarted -= RunAway;
             _player.OnBonusComplete -= StopRunAway;
@@ -79,6 +91,7 @@ namespace GameCore.Enemies
 
         public virtual void RunAway()
         {
+            _isScared = true;
             for (int i = 0; i < _materials.Length; ++i)
             {
                 _materials[i].color = _colorScared;
@@ -88,6 +101,7 @@ namespace GameCore.Enemies
 
         public virtual void StopRunAway()
         {
+            _isScared = false;
             for (int i = 0; i < _materials.Length; ++i)
             {
                 _materials[i].color = _colorDefaut;
@@ -95,26 +109,6 @@ namespace GameCore.Enemies
             _movementController.StartPatrol();
         }
 
-        protected float DistanceOnNavMesh(Vector3 start, Vector3 end)
-        {
-            NavMeshPath _path = new NavMeshPath();
-            float distance = 0;
-            NavMesh.CalculatePath(start, end, NavMesh.AllAreas, _path);
-            distance += Vector3.Distance(start, _path.corners[0]);
-            for (int k = 1; k < _path.corners.Length; ++k)
-            {
-                distance += Vector3.Distance(_path.corners[k], _path.corners[k - 1]);
-            }
-            return distance;
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if ((1 << other.gameObject.layer & _playerMask) != 0)
-            {
-                other.gameObject.GetComponent<IHealth>().TakeDamage(Attack);
-                _movementController.StartMoveAway();
-            }
-        }
+        protected abstract void OnTriggerEnter(Collider other);
     }
 }

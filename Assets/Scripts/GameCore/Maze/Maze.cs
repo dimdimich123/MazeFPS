@@ -21,7 +21,7 @@ namespace GameCore.DynamicMaze
                 for (int j = 0; j < width; j++)
                 {
                     _mazeCells[i, j] = new MazeCell();
-                    _mazeCells[i, j].Position = new UnityEngine.Vector3(j * horizontalWallSize, 0, -(i * verticalWallSize));
+                    _mazeCells[i, j].Position = new Vector3(j * horizontalWallSize, 0, -(i * verticalWallSize));
                     _mazeCells[i, j].PositionForMovement = _mazeCells[i, j].Position;
                     _mazeCells[i, j].PositionForMovement.y = 0.5f;
                 }
@@ -43,55 +43,59 @@ namespace GameCore.DynamicMaze
         {
             float distanceForPlayer = 0;
             float distanceForEnemy = 0;
-            float distanceDifference = 0;
+            float distanceDifference = float.MinValue;
             float maxDistanceForPlayer = 0;
             float diff = 0;
-            Vector3 result = new Vector3();
+            MazeCell result = null;
             for (int i = 0; i < Height; ++i)
             {
                 for (int j = 0; j < Width; j++)
                 {
+                    if (_mazeCells[i, j].IsFree == false) continue;
                     distanceForPlayer = DistanceOnNavMesh(playerTransform, _mazeCells[i, j].PositionForMovement);
                     distanceForEnemy = DistanceOnNavMesh(enemyTransform, _mazeCells[i, j].PositionForMovement);
                     diff = distanceForPlayer - distanceForEnemy;
-                    if (diff == distanceDifference)
+                    if (Mathf.Abs(diff) - Mathf.Abs(distanceDifference) < 0.5f)
                     {
                         if (distanceForPlayer > maxDistanceForPlayer)
                         {
                             maxDistanceForPlayer = distanceForPlayer;
                             distanceDifference = diff;
-                            result = _mazeCells[i, j].PositionForMovement;
+                            result = _mazeCells[i, j];
                         }
                     }
                     else if (diff > distanceDifference)
                     {
                         distanceDifference = diff;
                         maxDistanceForPlayer = distanceForPlayer;
-                        result = _mazeCells[i, j].PositionForMovement;
+                        result = _mazeCells[i, j];
                     }
                 }
             }
-            return result;
+            result.IsFree = false;
+            return result.PositionForMovement;
         }
 
         public Vector3 FindPositionToHide(Vector3 position)
         {
             float distance = 0;
             float maxDistance = 0;
-            Vector3 result = new Vector3();
+            MazeCell result = null;
             for (int i = 0; i < Height; ++i)
             {
                 for (int j = 0; j < Width; j++)
                 {
+                    if (_mazeCells[i, j].IsFree == false) continue;
                     distance = DistanceOnNavMesh(position, _mazeCells[i, j].PositionForMovement);
                     if (distance > maxDistance)
                     {
                         maxDistance = distance;
-                        result = _mazeCells[i, j].PositionForMovement;
+                        result = _mazeCells[i, j];
                     }
                 }
             }
-            return result;
+            result.IsFree = false;
+            return result.PositionForMovement;
         }
 
         public static float DistanceOnNavMesh(Vector3 start, Vector3 end)
@@ -105,6 +109,28 @@ namespace GameCore.DynamicMaze
                 distance += Vector3.Distance(_path.corners[k], _path.corners[k - 1]);
             }
             return distance;
+        }
+
+        public Vector3 GetRandomPosition()
+        {
+            int mazeCellHeightIndex = Random.Range(0, Height);
+            int mazeCellWidthIndex = Random.Range(0, Width);
+            return _mazeCells[mazeCellHeightIndex, mazeCellWidthIndex].Position;
+        }
+
+        public Vector3 GetRandomPositionForMovement()
+        {
+            int mazeCellHeightIndex = Random.Range(0, Height);
+            int mazeCellWidthIndex = Random.Range(0, Width);
+            return _mazeCells[mazeCellHeightIndex, mazeCellWidthIndex].PositionForMovement;
+        }
+
+        public void FreeAllCells()
+        {
+            foreach (MazeCell cell in _mazeCells)
+            {
+                cell.IsFree = true;
+            }
         }
 
         public MazeCell this[int index1, int index2]

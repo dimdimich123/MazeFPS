@@ -30,6 +30,10 @@ namespace GameCore.Enemies
             MaxHealth = health;
         }
 
+        public void Reinit()
+        {
+            CurrentHealth = MaxHealth;
+        }
         public void TakeDamage(int damage)
         {
             if (CurrentHealth <= 0)

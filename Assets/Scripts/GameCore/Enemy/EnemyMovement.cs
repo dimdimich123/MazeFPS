@@ -16,8 +16,9 @@ namespace GameCore.Enemies
         private Maze _maze;
         public Maze Maze => _maze;
 
-        private float _speed;
-        private float _speedMoveAway;
+        public float Speed { get; private set; }
+        public float SpeedMoveAway { get; private set; }
+
         private float _distanceToFind;
         private float _stoppingDistanceSquare;
         private Transform _player;
@@ -33,8 +34,8 @@ namespace GameCore.Enemies
         public void Init(Maze maze, float speed, float speedMoveAway, float distanceToFind, float stoppingDistance, Transform player)
         {
             _maze = maze;
-            _speed = speed;
-            _speedMoveAway = speedMoveAway;
+            Speed = speed;
+            SpeedMoveAway = speedMoveAway;
             _distanceToFind = distanceToFind;
             _stoppingDistanceSquare = stoppingDistance * stoppingDistance;
             _player = player;
@@ -95,12 +96,12 @@ namespace GameCore.Enemies
             _cellHeight = Random.Range(0, _maze.Height);
             _cellWidth = Random.Range(0, _maze.Width);
             _agent.destination = _maze[_cellHeight, _cellWidth].PositionForMovement;
-            _agent.speed = _speedMoveAway;
+            _agent.speed = SpeedMoveAway;
             while (DestinationNotReached() && PlayerNearby())
             {
                 yield return _waitForSeconsd;
             }
-            _agent.speed = _speed;
+            _agent.speed = Speed;
             StartPatrol();
         }
 

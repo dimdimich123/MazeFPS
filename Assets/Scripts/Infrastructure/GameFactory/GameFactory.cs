@@ -38,9 +38,7 @@ namespace Infrastructure.Factory
         public GameObject CreatePlayer(Maze maze, MovementControllerConfig config)
         {
             GameObject player = _prefabProvider.Player;
-            int mazeCellHeightIndex = Random.Range(0, _levelConfig.MazeConfig.Height);
-            int mazeCellWidthIndex = Random.Range(0, _levelConfig.MazeConfig.Width);
-            Vector3 position = maze[mazeCellHeightIndex, mazeCellWidthIndex].Position;
+            Vector3 position = maze.GetRandomPosition();
             position.y += player.transform.localScale.y;
 
             GameObject _player = Object.Instantiate(player, position, Quaternion.identity); ;
@@ -55,9 +53,7 @@ namespace Infrastructure.Factory
         public Enemy CreateEnemy(EnemyTypeId enemyTypeId, Maze maze)
         {
             GameObject enemy = _prefabProvider.GetEnemy(enemyTypeId);
-            int mazeCellHeightIndex = Random.Range(0, _levelConfig.MazeConfig.Height);
-            int mazeCellWidthIndex = Random.Range(0, _levelConfig.MazeConfig.Width);
-            Vector3 position = maze[mazeCellHeightIndex, mazeCellWidthIndex].Position;
+            Vector3 position = maze.GetRandomPosition();
             position.y += enemy.transform.localScale.y;
 
             GameObject newEnemy = Object.Instantiate(enemy, position, Quaternion.identity);
@@ -75,6 +71,13 @@ namespace Infrastructure.Factory
             }
 
             return levelUI;
+        }
+
+        public GameObject CreateBonus(Maze maze)
+        {
+            Vector3 position = maze.GetRandomPosition();
+            position.y += 0.5f;
+            return Object.Instantiate(_prefabProvider.Bonus, position, Quaternion.identity);
         }
     }
 }

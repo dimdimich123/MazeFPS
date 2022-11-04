@@ -51,6 +51,8 @@ namespace GameCore.ObjectPool
                     int index1 = UnityEngine.Random.Range(0, _maze.Height);
                     int index2 = UnityEngine.Random.Range(0, _maze.Width);
                     result.transform.position = _maze[index1, index2].Position;
+                    result.gameObject.SetActive(true);
+                    result.Reinit();
                 }
                 else
                 {
@@ -70,6 +72,7 @@ namespace GameCore.ObjectPool
         public void ReturnObject(Enemy obj)
         {
             _pool.Add(obj);
+            obj.gameObject.SetActive(false);
             OnEnemyReturned?.Invoke();
         }
     }
