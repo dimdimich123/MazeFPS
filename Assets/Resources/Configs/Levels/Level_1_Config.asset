@@ -21,3 +21,4 @@ MonoBehaviour:
     Count: 2
   - Type: 1
     Count: 2
+  _timebetweenSpawnBonus: 1

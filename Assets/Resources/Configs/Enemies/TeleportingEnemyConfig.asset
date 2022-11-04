@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67b3392d5a7455e47af5fa0a0ba0221c, type: 3}
   m_Name: TeleportingEnemyConfig
   m_EditorClassIdentifier: 
-  _health: 100
+  _health: 1
   _attack: 25
   _speed: 4
+  _speedMoveAway: 6
   _colorDefault: {r: 0.39081216, g: 0, b: 0.6698113, a: 1}
   _colorScared: {r: 0.46498793, g: 0.41972235, b: 0.6792453, a: 127}
   _distanceToFind: 10
