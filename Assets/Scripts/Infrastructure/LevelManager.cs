@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using GameCore.Players;
 using GameCore.ObjectPool;
@@ -9,24 +9,32 @@ using Infrastructure.Configs;
 using GameCore.CommonLogic;
 using GameCore.Enemies;
 using UI;
+using UnityEngine;
 
 namespace Infrastructure
 {
-    public sealed class LevelManager : IDisposable
+    public sealed class LevelManager : MonoBehaviour
     {
         private const string _defeatHeader = "You Lose!";
         private const string _victoryHeader = "Congratulations! \nYou won!";
 
-        private readonly PlayerDeath _playerDeath;
-        private readonly LevelUIManager _levelUI;
-        private readonly EnemiesObjectPool _enemiesPool;
+        private Player _player;
+        private PlayerDeath _playerDeath;
+        private LevelUIManager _levelUI;
+        private EnemiesObjectPool _enemiesPool;
+        private Maze _maze;
+        private GameObject _bonus;
+        private Transform _bonusTransform;
+        private float _timebetweenSpawnBonus;
 
         private readonly List<EnemyTypeId> _remainingEnemies = new List<EnemyTypeId>();
 
-        public LevelManager(Player player, LevelUIManager levelUI, EnemyCreationData[] enemiesData, 
-            Maze maze, GameFactory gameFactory, ConfigsProvider configProvider, int enemiesAtSameTime)
+        public void Init(Player player, LevelUIManager levelUI, EnemyCreationData[] enemiesData, 
+            Maze maze, GameFactory gameFactory, ConfigsProvider configProvider, int enemiesAtSameTime, float timebetweenSpawnBonus)
         {
-            
+            _timebetweenSpawnBonus = timebetweenSpawnBonus;
+            _maze = maze;
+            _player = player;
             _playerDeath = player.GetComponent<PlayerDeath>();
             _levelUI = levelUI;
             _enemiesPool = new EnemiesObjectPool(enemiesData, gameFactory, maze, configProvider.GetEnemyConfig, player);
@@ -44,16 +52,34 @@ namespace Infrastructure
                 SpawnEnemy();
             }
 
+            _bonus = gameFactory.CreateBonus(maze);
+            _bonusTransform = _bonus.GetComponent<Transform>();
+
+            _player.OnBonusComplete += OnBonusEnd;
             _playerDeath.OnDie += LevelLose;
             _enemiesPool.OnEnemyReturned += OnEnemyDie;
         }
 
+        private IEnumerator Timer()
+        {
+            yield return new WaitForSeconds(_timebetweenSpawnBonus);
+            _bonusTransform.position = _maze.GetRandomPositionForMovement();
+            _bonus.gameObject.SetActive(true);
+        }
+
         private void SpawnEnemy()
         {
-            int enemyIndex = UnityEngine.Random.Range(0, _remainingEnemies.Count);
+            int enemyIndex = Random.Range(0, _remainingEnemies.Count);
             Enemy enemy = _enemiesPool.GetEnemy(_remainingEnemies[enemyIndex]);
+            enemy.gameObject.SetActive(true);
             enemy.Active();
             _remainingEnemies.RemoveAt(enemyIndex);
+        }
+
+        private void OnBonusEnd()
+        {
+            _maze.FreeAllCells();
+            StartCoroutine(Timer());
         }
 
         private void OnEnemyDie()
@@ -63,8 +89,8 @@ namespace Infrastructure
                 SpawnEnemy();
             }
             else
+            if(Enemy.NumberAlive == 0)
             {
-                if(Enemy.NumberAlive == 0)
                 LevelWon();
             }
         }
@@ -79,8 +105,9 @@ namespace Infrastructure
             _levelUI.LevelComplete(_victoryHeader);
         }
 
-        public void Dispose()
+        public void OnDestroy()
         {
+            _player.OnBonusComplete -= OnBonusEnd;
             _playerDeath.OnDie -= LevelLose;
             _enemiesPool.OnEnemyReturned -= OnEnemyDie;
         }

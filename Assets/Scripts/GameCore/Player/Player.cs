@@ -35,17 +35,16 @@ namespace GameCore.Players
             _death.Init(_health);
         }
 
-        public void TakeBonus()
+        public void TakeBonus(float duration)
         {
-            StopAllCoroutines();
-            StartCoroutine(EnterHunterMode());
+            StartCoroutine(EnterHunterMode(duration));
         }
 
-        private IEnumerator EnterHunterMode()
+        private IEnumerator EnterHunterMode(float duration)
         {
             _material.color = _colorHunterMode;
             OnBonusStarted?.Invoke();
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(duration);
             OnBonusComplete?.Invoke();
             _material.color = _colorDefaut;
         }
