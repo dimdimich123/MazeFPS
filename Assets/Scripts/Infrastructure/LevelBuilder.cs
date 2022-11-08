@@ -21,8 +21,8 @@ namespace Infrastructure
         private void Awake()
         {
             _configsProvider = new ConfigsProvider();
-            SceneName sceneName = _configsProvider.LoadLevel.SceneName;
-            _levelConfig = _configsProvider.GetLevelConfig(sceneName);
+            LevelNumber levelNumber = _configsProvider.LoadLevel.LevelNumber;
+            _levelConfig = _configsProvider.GetLevelConfig(levelNumber);
             _gameFactory = new GameFactory(_levelConfig);
             
             Build();
