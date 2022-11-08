@@ -12,7 +12,6 @@ namespace GameCore.Enemies
             base.RunAway();
             _movementController.Agent.isStopped = true;
             _movementController.Agent.Warp(_movementController.Maze.FindPositionToHide(_playerTransform.position));
-            Debug.Log(_movementController.Agent.isStopped);
         }
 
         public override void StopRunAway()
@@ -25,7 +24,6 @@ namespace GameCore.Enemies
         {
             base.Reinit();
             StopRunAway();
-            //RunAway();
         }
 
         protected override void OnTriggerEnter(Collider other)
