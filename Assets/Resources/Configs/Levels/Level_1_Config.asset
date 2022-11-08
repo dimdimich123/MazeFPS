@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6128226836828c4e898c84008c357b6, type: 3}
   m_Name: Level_1_Config
   m_EditorClassIdentifier: 
-  _sceneName: 1
+  _levelNumber: 0
   _mazeConfig: {fileID: 11400000, guid: a9359060361f28f4085a17908e0d6d9c, type: 2}
   _playerConfig: {fileID: 11400000, guid: 6452f063c7da6c54482d0a3b3d041a09, type: 2}
   _enemiesAtSameTime: 2
@@ -21,4 +21,4 @@ MonoBehaviour:
     Count: 2
   - Type: 1
     Count: 2
-  _timebetweenSpawnBonus: 1
+  _timebetweenSpawnBonus: 30
