@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2df45fc4025629a41a4934fb9ab2a215, type: 3}
-  m_Name: MazeLevel1
+  m_Name: MazeLevel2
   m_EditorClassIdentifier: 
-  _verticalWall: {fileID: 2369481382466449663, guid: 61e4583799ecca24ca5e84b319ef6fff, type: 3}
-  _horizontalWall: {fileID: 806277502724617191, guid: 9db60c95122f95f45bae41d882359c60, type: 3}
-  _floor: {fileID: 2642591710082132356, guid: ca5f50217f01e1e408503f81b275a000, type: 3}
-  _height: 8
-  _width: 8
+  _verticalWall: {fileID: 4058405946093121715, guid: 2f7bfe89e86945e48bcbbc5905831224, type: 3}
+  _horizontalWall: {fileID: 1697197988787221154, guid: 218c9d77980524f43a692f49ed74fd3f, type: 3}
+  _floor: {fileID: 4970285758168400599, guid: b91273e44989eb34bb4d1925d09223ea, type: 3}
+  _height: 10
+  _width: 10
