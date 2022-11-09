@@ -7,6 +7,7 @@ namespace UI.Menu
     public sealed class MenuPresenter : MonoBehaviour
     {
         [SerializeField] private AudioMixer _mixer;
+        [SerializeField] private AudioSource _buttonClickSound;
 
         private MenuView _view;
         private MenuModel _model;
@@ -27,21 +28,25 @@ namespace UI.Menu
 
         private void OnStart()
         {
+            _buttonClickSound.Play();
             _model.StartLevel();
         }
 
         private void OnExit()
         {
+            _buttonClickSound.Play();
             _model.Exit();
         }
 
         private void OnMusic(bool state)
         {
+            _buttonClickSound.Play();
             _model.ChangeMusic(state);
         }
 
         private void OnSound(bool state)
         {
+            _buttonClickSound.Play();
             _model.ChangeSound(state);
         }
 
