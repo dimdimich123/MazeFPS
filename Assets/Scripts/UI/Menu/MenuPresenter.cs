@@ -16,6 +16,7 @@ namespace UI.Menu
         {
             _view = GetComponent<MenuView>();
             _model = new MenuModel(_mixer);
+            Cursor.lockState = CursorLockMode.None;
         }
 
         private void OnEnable()

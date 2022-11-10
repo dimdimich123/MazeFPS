@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2df45fc4025629a41a4934fb9ab2a215, type: 3}
   m_Name: MazeLevel2
   m_EditorClassIdentifier: 
-  _verticalWall: {fileID: 4058405946093121715, guid: 2f7bfe89e86945e48bcbbc5905831224, type: 3}
+  _verticalWall: {fileID: 4970285758168400599, guid: b91273e44989eb34bb4d1925d09223ea, type: 3}
   _horizontalWall: {fileID: 1697197988787221154, guid: 218c9d77980524f43a692f49ed74fd3f, type: 3}
-  _floor: {fileID: 4970285758168400599, guid: b91273e44989eb34bb4d1925d09223ea, type: 3}
+  _floor: {fileID: 4058405946093121715, guid: 2f7bfe89e86945e48bcbbc5905831224, type: 3}
   _height: 10
   _width: 10

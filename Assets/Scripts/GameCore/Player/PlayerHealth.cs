@@ -6,6 +6,7 @@ namespace GameCore.Players
 {
     public sealed class PlayerHealth : MonoBehaviour, IHealth
     {
+        private PlayerAudio _audio;
         public event Action<float> OnChanged; 
         public int CurrentHealth 
         {
@@ -24,10 +25,12 @@ namespace GameCore.Players
         private int _currentHealth;
         private int _maxHealth;
 
-        public void Init(int health)
+        public void Init(int health, PlayerAudio audio)
         {
             CurrentHealth = health;
             MaxHealth = health;
+
+            _audio = audio;
         }
 
         public void TakeDamage(int damage)
@@ -38,6 +41,7 @@ namespace GameCore.Players
             }
             
             CurrentHealth -= damage;
+            _audio.PlayTakeDamage();
         }
     }
 }

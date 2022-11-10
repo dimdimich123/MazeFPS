@@ -11,13 +11,14 @@ using GameCore.Enemies;
 using UI;
 using UnityEngine;
 
-namespace Infrastructure
+namespace Infrastructure.Level
 {
     public sealed class LevelManager : MonoBehaviour
     {
         private const string _defeatHeader = "You Lose!";
         private const string _victoryHeader = "Congratulations! \nYou won!";
 
+        private LevelAudio _audio;
         private Player _player;
         private PlayerDeath _playerDeath;
         private LevelUIManager _levelUI;
@@ -37,6 +38,7 @@ namespace Infrastructure
             _player = player;
             _playerDeath = player.GetComponent<PlayerDeath>();
             _levelUI = levelUI;
+            _audio = GetComponent<LevelAudio>();
             _enemiesPool = new EnemiesObjectPool(enemiesData, gameFactory, maze, configProvider.GetEnemyConfig, player);
 
             for (int i = 0; i < enemiesData.Length; i++)
@@ -55,6 +57,7 @@ namespace Infrastructure
             _bonus = gameFactory.CreateBonus(maze);
             _bonusTransform = _bonus.GetComponent<Transform>();
 
+            _player.OnBonusStarted += OnBonusStart;
             _player.OnBonusComplete += OnBonusEnd;
             _playerDeath.OnDie += LevelLose;
             _enemiesPool.OnEnemyReturned += OnEnemyDie;
@@ -76,11 +79,17 @@ namespace Infrastructure
             _remainingEnemies.RemoveAt(enemyIndex);
         }
 
+        private void OnBonusStart()
+        {
+            _audio.StartBonusMusic();
+        }
+
         private void OnBonusEnd()
         {
             _maze.FreeAllCells();
             StartCoroutine(Timer());
-        }
+            _audio.StopBonusMusic();
+        } 
 
         private void OnEnemyDie()
         {
@@ -97,16 +106,19 @@ namespace Infrastructure
 
         private void LevelLose()
         {
+            _audio.PlayLose();
             _levelUI.LevelComplete(_defeatHeader);
         }
 
         private void LevelWon()
         {
+            _audio.PlayWin();
             _levelUI.LevelComplete(_victoryHeader);
         }
 
         public void OnDestroy()
         {
+            _player.OnBonusStarted -= OnBonusStart;
             _player.OnBonusComplete -= OnBonusEnd;
             _playerDeath.OnDie -= LevelLose;
             _enemiesPool.OnEnemyReturned -= OnEnemyDie;

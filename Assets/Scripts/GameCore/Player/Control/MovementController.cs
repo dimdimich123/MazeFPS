@@ -9,12 +9,14 @@ namespace GameCore.Players.Control
         protected Transform _cameraTransform;
         protected CharacterController _characterController;
         protected Transform _transform;
+        protected PlayerAudio _audio;
 
         private void Awake()
         {
             _cameraTransform = GetComponentInChildren<Camera>().transform;
             _characterController = GetComponent<CharacterController>();
             _transform = GetComponent<Transform>();
+            _audio = GetComponent<PlayerAudio>();
         }
 
         public void Init(float speed, float sensitivity)
@@ -35,6 +37,11 @@ namespace GameCore.Players.Control
             while(true)
             {
                 MovePlayer();
+                if (_characterController.velocity.sqrMagnitude > 8f)
+                {
+                    _audio.PlayStep();
+                }
+
                 RotateCamera();
                 yield return null;
             }

@@ -10,6 +10,7 @@ namespace GameCore.Players
     { 
         [SerializeField] private PlayerHealth _health;
         [SerializeField] private PlayerDeath _death;
+        [SerializeField] private PlayerAudio _audio;
         [SerializeField] private MeshRenderer _renderer;
         private MovementController _movementController;
         private Material _material;
@@ -31,7 +32,7 @@ namespace GameCore.Players
             Attack = config.Attack;
             _movementController = controller;
             _movementController.Init(config.Speed, mouseSensitivity);
-            _health.Init(config.Health);
+            _health.Init(config.Health, _audio);
             _death.Init(_health);
         }
 

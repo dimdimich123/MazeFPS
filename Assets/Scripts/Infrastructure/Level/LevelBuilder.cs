@@ -10,7 +10,7 @@ using System.Linq;
 using GameCore.Players;
 using UI;
 
-namespace Infrastructure
+namespace Infrastructure.Level
 {
     public sealed class LevelBuilder : MonoBehaviour
     {

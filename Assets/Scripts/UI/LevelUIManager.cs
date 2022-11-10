@@ -11,20 +11,26 @@ namespace UI
         [SerializeField] private HUDView _hudView;
         [SerializeField] private PauseView _pauseView;
 
+        [SerializeField] private AudioSource _buttonClickSound;
+
         private IPanel _currentView;
 
         private void Awake()
         {
+            _pauseView.Init(_buttonClickSound);
+
             _pauseView.OnContinue += ContinueLevel;
 
             _currentView = _hudView;
             _hudView.Open();
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void ContinueLevel()
         {
             _hudView.Open();
             _currentView = _hudView;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void LevelComplete(string result)
@@ -33,12 +39,17 @@ namespace UI
             _completeView.SetResultText(result);
             _completeView.Open();
             _currentView = _completeView;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         private void Update()
         {
             if(Input.GetKeyDown(KeyCode.Escape))
             {
+                if (_buttonClickSound.isPlaying == false)
+                {
+                    _buttonClickSound.Play();
+                }
                 OnApplicationFocus(false);
             }
         }
@@ -50,6 +61,7 @@ namespace UI
                 _currentView?.Close();
                 _pauseView.Open();
                 _currentView = _pauseView;
+                Cursor.lockState = CursorLockMode.None;
             }
         }
 

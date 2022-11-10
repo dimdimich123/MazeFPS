@@ -2740,6 +2740,7 @@ MonoBehaviour:
   _buttonStart: {fileID: 1221967389}
   _toggleMusic: {fileID: 1078817613}
   _toggleSound: {fileID: 1360790681}
+  _mixer: {fileID: 24100000, guid: 9a11837700940d14c845259bb2c80844, type: 2}
 --- !u!1 &1907103585
 GameObject:
   m_ObjectHideFlags: 0

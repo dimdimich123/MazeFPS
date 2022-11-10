@@ -14,6 +14,13 @@ namespace UI.Pause
         public event Action OnContinue;
         public event Action OnExit;
 
+        private AudioSource _buttonClickAudio;
+
+        public void Init(AudioSource audio)
+        {
+            _buttonClickAudio = audio;
+        }
+
         private void OnEnable()
         {
             _buttonContinue.onClick.AddListener(Continue);
@@ -22,11 +29,13 @@ namespace UI.Pause
 
         private void Continue()
         {
+            _buttonClickAudio.Play();
             OnContinue?.Invoke();
         }
 
         private void Exit()
         {
+            _buttonClickAudio.Play();
             OnExit?.Invoke();
         }
 
