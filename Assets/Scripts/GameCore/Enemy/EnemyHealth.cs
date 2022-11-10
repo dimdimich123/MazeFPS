@@ -6,6 +6,8 @@ namespace GameCore.Enemies
 {
     public sealed class EnemyHealth : MonoBehaviour, IHealth
     {
+        private EnemyAudio _audio;
+
         public event Action<int> OnChanged;
         public int CurrentHealth
         {
@@ -24,10 +26,11 @@ namespace GameCore.Enemies
         private int _currentHealth;
         private int _maxHealth;
 
-        public void Init(int health)
+        public void Init(int health, EnemyAudio audio)
         {
             CurrentHealth = health;
             MaxHealth = health;
+            _audio = audio;
         }
 
         public void Reinit()
@@ -40,7 +43,9 @@ namespace GameCore.Enemies
             {
                 return;
             }
+
             CurrentHealth -= damage;
+            _audio.PlayTakeDamage();
         }
     }
 }

@@ -11,10 +11,27 @@ namespace UI.Menu
         [SerializeField] private Toggle _toggleMusic;
         [SerializeField] private Toggle _toggleSound;
 
+        [SerializeField] private UnityEngine.Audio.AudioMixer _mixer;
+
         public event Action OnExit;
         public event Action OnStart;
         public event Action<bool> OnMusic;
         public event Action<bool> OnSound;
+
+        private void Awake()
+        {
+            _mixer.GetFloat("MusicVolume", out float musicVolume);
+            if (musicVolume <= -79f)
+            {
+                _toggleMusic.isOn = false;
+            }
+
+            _mixer.GetFloat("SoundVolume", out float soundVolume);
+            if (soundVolume <= -79f)
+            {
+                _toggleSound.isOn = false;
+            }
+        }
 
         private void OnEnable()
         {

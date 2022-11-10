@@ -14,6 +14,8 @@ namespace GameCore.Enemies
         public NavMeshAgent Agent => _agent;
 
         private Maze _maze;
+        private EnemyAudio _audio;
+
         public Maze Maze => _maze;
 
         public float Speed { get; private set; }
@@ -31,7 +33,7 @@ namespace GameCore.Enemies
         private int _cellWidth;
         private readonly WaitForSeconds _waitForSeconsd = new WaitForSeconds(_timeToUpdate);
 
-        public void Init(Maze maze, float speed, float speedMoveAway, float distanceToFind, float stoppingDistance, Transform player)
+        public void Init(Maze maze, float speed, float speedMoveAway, float distanceToFind, float stoppingDistance, Transform player, EnemyAudio audio)
         {
             _maze = maze;
             Speed = speed;
@@ -42,6 +44,8 @@ namespace GameCore.Enemies
             _playerGameObject = _player.gameObject;
             _agent.speed = speed;
             _agent.stoppingDistance = stoppingDistance;
+            _audio = audio;
+            StartPatrol();
         }
 
         public void StartPatrol()
@@ -60,6 +64,7 @@ namespace GameCore.Enemies
                     {
                         StartFollow();
                     }
+                    PlayStep();
                     yield return _waitForSeconsd;
                 }
                 _cellHeight = Random.Range(0, _maze.Height);
@@ -79,6 +84,8 @@ namespace GameCore.Enemies
             while (PlayerNearby())
             {
                 _agent.destination = _player.position;
+                PlayStep();
+                _audio.PlayStep();
                 yield return _waitForSeconsd;
             }
 
@@ -99,6 +106,7 @@ namespace GameCore.Enemies
             _agent.speed = SpeedMoveAway;
             while (DestinationNotReached() && PlayerNearby())
             {
+                PlayStep();
                 yield return _waitForSeconsd;
             }
             _agent.speed = Speed;
@@ -117,6 +125,14 @@ namespace GameCore.Enemies
                 _isSeen = _hitInfo.collider.gameObject == _playerGameObject;
             }
             return _isSeen;
+        }
+
+        private void PlayStep()
+        {
+            if(_agent.velocity.sqrMagnitude > 8f)
+            {
+                _audio.PlayStep();
+            }
         }
     }
 }

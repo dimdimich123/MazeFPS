@@ -19,6 +19,7 @@ namespace GameCore.Enemies
         [SerializeField] protected Transform _transform;
         [SerializeField] protected EnemyHealth _health;
         [SerializeField] protected EnemyDeath _death;
+        [SerializeField] protected EnemyAudio _audio;
         [SerializeField] protected MeshRenderer[] _renderers;
         [SerializeField] protected EnemyMovement _movementController;
         protected Material[] _materials;
@@ -50,9 +51,10 @@ namespace GameCore.Enemies
             Attack = config.Attack;
             _player = player;
             _playerTransform = playerTransform;
-            _movementController.Init(maze, config.Speed, config.SpeedMoveAway, config.DistanceToFind, config.StoppingDistance, playerTransform);
-            _health.Init(config.Health);
+            _movementController.Init(maze, config.Speed, config.SpeedMoveAway, config.DistanceToFind, config.StoppingDistance, playerTransform, _audio);
+            _health.Init(config.Health, _audio);
             _death.Init(_health);
+            OnEnable();
         }
 
         public virtual void Reinit()
