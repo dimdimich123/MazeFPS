@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using GameCore.Players.Control;
 
 namespace UI.Menu
 {
@@ -11,25 +12,43 @@ namespace UI.Menu
         [SerializeField] private Toggle _toggleMusic;
         [SerializeField] private Toggle _toggleSound;
 
+        [SerializeField] private Slider _sliderSensitivity;
+        [SerializeField] private Toggle _toggleKeyboardAndMouse;
+        [SerializeField] private Toggle _toggleJoysticks;
+
         [SerializeField] private UnityEngine.Audio.AudioMixer _mixer;
 
         public event Action OnExit;
         public event Action OnStart;
         public event Action<bool> OnMusic;
         public event Action<bool> OnSound;
+        public event Action<float> OnSensitivity;
+        public event Action<Type> OnChangeMovementControl;
 
-        private void Awake()
+        public void Init(UnityEngine.Audio.AudioMixer mixer, Configs.MovementControllerConfig movementConfig)
         {
-            _mixer.GetFloat("MusicVolume", out float musicVolume);
+            
+            mixer.GetFloat(MenuModel.MusicVariable, out float musicVolume);
             if (musicVolume <= -79f)
             {
                 _toggleMusic.isOn = false;
             }
 
-            _mixer.GetFloat("SoundVolume", out float soundVolume);
+            mixer.GetFloat(MenuModel.SoundVariable, out float soundVolume);
             if (soundVolume <= -79f)
             {
                 _toggleSound.isOn = false;
+            }
+
+            _sliderSensitivity.value = movementConfig.MouseSensitivity;
+
+            if(movementConfig.ControllerType == typeof(Joysticks))
+            {
+                _toggleJoysticks.isOn = true;
+            }
+            else
+            {
+                _toggleKeyboardAndMouse.isOn = true;
             }
         }
 
@@ -39,6 +58,9 @@ namespace UI.Menu
             _buttonStart.onClick.AddListener(OnButtonStart);
             _toggleMusic.onValueChanged.AddListener(OnToggleMusic);
             _toggleSound.onValueChanged.AddListener(OnToggleSound);
+            _sliderSensitivity.onValueChanged.AddListener(OnSliderSensitivity);
+            _toggleKeyboardAndMouse.onValueChanged.AddListener(OnToggleKeyboardAndMouse);
+            _toggleJoysticks.onValueChanged.AddListener(OnToggleJoysticks);
         }
 
         private void OnButtonExit()
@@ -61,12 +83,36 @@ namespace UI.Menu
             OnSound?.Invoke(state);
         }
 
+        private void OnSliderSensitivity(float value)
+        {
+            OnSensitivity?.Invoke(value);
+        }
+
+        private void OnToggleKeyboardAndMouse(bool state)
+        {
+            if(state)
+            {
+                OnChangeMovementControl?.Invoke(typeof(KeyboardAndMouse));
+            }
+        }
+
+        private void OnToggleJoysticks(bool state)
+        {
+            if(state)
+            {
+                OnChangeMovementControl?.Invoke(typeof(Joysticks));
+            }
+        }
+
         private void OnDisable()
         {
             _buttonExit.onClick.RemoveAllListeners();
             _buttonStart.onClick.RemoveAllListeners();
             _toggleMusic.onValueChanged.RemoveAllListeners();
             _toggleSound.onValueChanged.RemoveAllListeners();
+            _sliderSensitivity.onValueChanged.RemoveAllListeners();
+            _toggleKeyboardAndMouse.onValueChanged.RemoveAllListeners();
+            _toggleJoysticks.onValueChanged.RemoveAllListeners();
         }
     }
 }

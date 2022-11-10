@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using Configs;
 
 namespace UI.Menu
 {
     [RequireComponent(typeof(MenuView))]
     public sealed class MenuPresenter : MonoBehaviour
     {
+        [SerializeField] private MovementControllerConfig _movementConfig;
         [SerializeField] private AudioMixer _mixer;
         [SerializeField] private AudioSource _buttonClickSound;
 
@@ -15,7 +17,8 @@ namespace UI.Menu
         private void Awake()
         {
             _view = GetComponent<MenuView>();
-            _model = new MenuModel(_mixer);
+            _model = new MenuModel(_mixer, _movementConfig);
+            _view.Init(_mixer, _movementConfig);
             Cursor.lockState = CursorLockMode.None;
         }
 
@@ -25,6 +28,8 @@ namespace UI.Menu
             _view.OnExit += OnExit;
             _view.OnMusic += OnMusic;
             _view.OnSound += OnSound;
+            _view.OnSensitivity += OnSensitivityChange;
+            _view.OnChangeMovementControl += OnChangeMovementControl;
         }
 
         private void OnStart()
@@ -51,12 +56,25 @@ namespace UI.Menu
             _model.ChangeSound(state);
         }
 
+        private void OnSensitivityChange(float value)
+        {
+            _model.ChangeSensitivity(value);
+        }
+
+        private void OnChangeMovementControl(System.Type type)
+        {
+            _buttonClickSound.Play();
+            _model.ChangeMovementControlType(type);
+        }
+
         private void OnDisable()
         {
             _view.OnStart -= OnStart;
             _view.OnExit -= OnExit;
             _view.OnMusic -= OnMusic;
             _view.OnSound -= OnSound;
+            _view.OnSensitivity -= OnSensitivityChange;
+            _view.OnChangeMovementControl -= OnChangeMovementControl;
         }
     }
 }

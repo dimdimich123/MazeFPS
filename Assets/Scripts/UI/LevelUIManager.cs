@@ -14,6 +14,7 @@ namespace UI
         [SerializeField] private AudioSource _buttonClickSound;
 
         private IPanel _currentView;
+        private bool isJoysticks = false;
 
         private void Awake()
         {
@@ -22,15 +23,30 @@ namespace UI
             _pauseView.OnContinue += ContinueLevel;
 
             _currentView = _hudView;
-            _hudView.Open();
-            Cursor.lockState = CursorLockMode.Locked;
+            _hudView.Open(); 
+        }
+
+        private void Start()
+        {
+            if (GetComponentInChildren<JoystickUI>() != null)
+            {
+                isJoysticks = true;
+            }
+
+            if (SystemInfo.deviceType == DeviceType.Desktop && !isJoysticks)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
 
         private void ContinueLevel()
         {
             _hudView.Open();
             _currentView = _hudView;
-            Cursor.lockState = CursorLockMode.Locked;
+            if (SystemInfo.deviceType == DeviceType.Desktop && !isJoysticks)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
         }
 
         public void LevelComplete(string result)
